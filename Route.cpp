@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <queue>
 #include <limits>
+#include <vector>
 
 using namespace std;
 
@@ -25,8 +26,8 @@ public:
 int dijkstra(string source, string destination, int startTime) {
     // Initialize distance map
     unordered_map<string, int> dist;
-    for (const auto& [city, neighbors] : graph) {
-        dist[city] = INF;
+    for (const auto& city : graph) {
+        dist[city.first] = INF;
     }
     dist[source] = startTime;
 
@@ -36,7 +37,8 @@ int dijkstra(string source, string destination, int startTime) {
 
     // Main loop
     while (!pq.empty()) {
-        auto [u, uDist] = pq.top();
+        string u = pq.top().first;
+        int uDist = pq.top().second;
         pq.pop();
 
         // Found shortest path to destination
@@ -45,7 +47,9 @@ int dijkstra(string source, string destination, int startTime) {
         }
 
         // Check all neighbors of u
-        for (const auto& [v, weight] : graph[u]) {
+        for (const auto& neighbor : graph[u]) {
+            string v = neighbor.first;
+            int weight = neighbor.second;
             int vDist = uDist + weight;
 
             // Check if path through u is shorter than current shortest path to v
@@ -67,7 +71,7 @@ int main() {
     cin >> source >> destination >> startTime;
 
     // Read graph from file
-    ifstream inputFile("flights.txt");
+    ifstream inputFile("Flights.txt");
     string line;
     while (getline(inputFile, line)) {
         string city1, city2;
